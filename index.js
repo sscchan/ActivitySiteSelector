@@ -8,7 +8,7 @@ const WeatherDao = require('./dao/WeatherDao');
 app.use(express.static('build'))
 
 app.get('/sites', async (req, res) => {
-  let sites = SitesDao.getSites();
+  let sites = await SitesDao.getSites();
   for (site of sites) {
     site.maxTemperature = await WeatherDao.getMaxTemperature(site.latitude, site.longitude);
   }
