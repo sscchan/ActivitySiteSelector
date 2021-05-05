@@ -15,6 +15,14 @@ app.get('/sites', async (req, res) => {
   for (site of sites) {
     site.maxTemperature = await WeatherDao.getMaxTemperature(site.latitude, site.longitude);
   }
+
+  if (req.query.maxTemperature) {
+    console.log(`Applying max temperature filter of ${req.query.maxTemperature}`);
+    sites = sites.filter(function(site) {
+      return site.maxTemperature < Number(req.query.maxTemperature);
+    });
+  }
+
   res.send(sites);
 });
 
