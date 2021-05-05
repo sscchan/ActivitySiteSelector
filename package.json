@@ -1,0 +1,23 @@
+{
+  "name": "activitysiteselector",
+  "version": "1.0.0",
+  "description": "This is a Proof of Concept fullstack application that select/filters out locations for adventure activities based on weather forecast information.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sscchan/ActivitySiteSelector.git"
+  },
+  "author": "Stephen Chan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sscchan/ActivitySiteSelector/issues"
+  },
+  "homepage": "https://github.com/sscchan/ActivitySiteSelector#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
