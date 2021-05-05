@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const port = process.env.PORT || 3000;
 
 const SitesDao = require('./dao/SitesDao.js');
 const WeatherDao = require('./dao/WeatherDao');
 
+app.use(bodyParser.json());
 app.use(express.static('build'))
+
 
 app.get('/sites', async (req, res) => {
   let sites = await SitesDao.getSites();
@@ -13,6 +16,28 @@ app.get('/sites', async (req, res) => {
     site.maxTemperature = await WeatherDao.getMaxTemperature(site.latitude, site.longitude);
   }
   res.send(sites);
+});
+
+app.delete('/sites/:siteName', async (req, res) => {
+  try {
+    await SitesDao.deleteSite(req.params.siteName);
+    res.status(200).send(req.params.siteName);
+  }
+  catch (Error) {
+    console.log(Error);
+    res.status(500).send();
+  }
+})
+
+app.put('/sites/:siteName', async (req, res) => {
+  try {
+    console.log(req.body);
+    await SitesDao.addSite(req.params.siteName, Number(req.body.latitude), Number(req.body.longitude));
+  }
+  catch (Error) {
+    console.log(Error);
+    res.status(500).send();
+  }
 });
 
 app.listen(port, () => {
