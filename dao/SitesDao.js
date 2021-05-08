@@ -45,8 +45,13 @@ async function getSites() {
     return sites;
 }
 
+function disconnectDatabase() {
+    client.disconnect();
+}
+
 seedDatabaseData();
 
 exports.addSite = addSite;
 exports.getSites = getSites;
 exports.deleteSite = deleteSite;
+exports.disconnectDatabase = disconnectDatabase;
