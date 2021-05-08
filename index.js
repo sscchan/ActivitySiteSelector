@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 3000;
 
 const SitesDao = require('./dao/SitesDao.js');
 const WeatherDao = require('./dao/WeatherDao');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('build'))
 
@@ -39,13 +41,14 @@ app.delete('/sites/:siteName', async (req, res) => {
 
 app.put('/sites/:siteName', async (req, res) => {
   try {
-    console.log(req.body);
     await SitesDao.addSite(req.params.siteName, Number(req.body.latitude), Number(req.body.longitude));
+    res.status(200).send(req.params.siteName);
   }
   catch (Error) {
     console.log(Error);
     res.status(500).send();
   }
+
 });
 
 app.listen(port, () => {

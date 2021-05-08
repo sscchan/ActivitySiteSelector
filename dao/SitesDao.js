@@ -19,7 +19,7 @@ async function seedDatabaseData() {
 }
 
 async function addSite(name, latitude, longitude) {
-    console.group(`Inserting ${name} with (${latitude},${longitude}) to the database.`)
+    console.log(`Inserting ${name} with (${latitude},${longitude}) to the database.`)
     await client.set(name, JSON.stringify({
         "name": name,
         "latitude": latitude,
