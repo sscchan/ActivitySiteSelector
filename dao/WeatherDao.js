@@ -2,6 +2,10 @@
 const axios = require('axios');
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
+if (!WEATHER_API_KEY) {
+    console.error("ERROR! OpenWeatherOrg Weather API key not set in environment variable WEATHER_API_KEY");
+}
+
 async function getDailyWeatherForecasts(latitude, longitude) {
     const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall',{ 
         params: 
