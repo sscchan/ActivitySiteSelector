@@ -1,6 +1,8 @@
 const request = require("supertest");
-const { v4: uuidv4 } = require('uuid');
-const { app, server, SitesDao } = require('./index.js');
+const SitesDao = require('./dao/SitesDao.js');
+const WeatherDao = require('./dao/WeatherDao.js');
+const Validator = require('./helper/Validator.js');
+const { app, server } = require('./index.js');
 
 afterAll(async (done) => {
   SitesDao.disconnectDatabase();
@@ -9,36 +11,30 @@ afterAll(async (done) => {
   done();
 });
 
-test("should get / ", async (done) => {
-  const response = await request(app).get("/");
-  expect(response.status).toBe(200);
-  done();
-});
+jest.mock('./dao/SitesDao.js');
+jest.mock('./dao/WeatherDao.js');
+jest.mock('./helper/Validator.js');
 
-test("(INTEGRATION) should add site, get sites, and delete site", async (done) => {
-  const testId = `TEST:${uuidv4()}`;
+beforeEach(() => {
 
-  // Add Site
-  const addSiteResponse =
-    await request(app)
-      .put(`/sites/${testId}`)
-      .send({
-        "latitude": "-30",
-        "longitude": "138"
-      });
+})
 
-  expect(addSiteResponse.status).toBe(200);
+test('should filter out sites by Max Temperature threshold', async (done) => {
+  SitesDao.getSites.mockResolvedValue([
+    { "name": "Mock1", "latitude": -34.9285, "longitude": 138.6007 },
+    { "name": "Mock2", "latitude": -35.0732, "longitude": 138.8576 },
+  ]);
 
-  // Fetch Sites
-  const getSitesResponse = await request(app).get(`/sites`);
+  WeatherDao.getMaxTemperature
+    .mockReturnValueOnce(10)
+    .mockReturnValueOnce(99);
+
+  const getSitesResponse = await request(app).get(`/sites?maxTemperature=50`);
   expect(getSitesResponse.status).toBe(200);
   expect(Array.isArray(getSitesResponse.body)).toBe(true);
-  const siteNames = getSitesResponse.body.map((site) => site.name);
-  expect(siteNames).toContain(testId);
+  expect(getSitesResponse.body.length).toBe(1);
+  expect(getSitesResponse.body[0].maxTemperature).toBe(10);
 
-  // Delete Site
-  const deleteSiteResponse = await request(app).delete(`/sites/${testId}`);
-  expect(deleteSiteResponse.status).toBe(200);
-
+  SitesDao.getSites.mockClear();
   done();
 });

@@ -4,7 +4,7 @@
   "description": "This is a Proof of Concept fullstack application that select/filters out locations for adventure activities based on weather forecast information.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
     "start": "node index.js"
   },
   "repository": {
