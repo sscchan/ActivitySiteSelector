@@ -10,7 +10,7 @@ afterAll(() => {
   SiteDao.disconnectDatabase();
 });
 
-test('(INTEG) can add, get and delete sites', async () => {
+test('(INTEGRATION) can add, get and delete sites', async () => {
   // Add test site
   const testId = `TEST:${uuidv4()}`;
   await SiteDao.addSite(testId, -30, 138);
