@@ -2,13 +2,13 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 3000;
 
 const SitesDao = require('./dao/SitesDao.js');
 const WeatherDao = require('./dao/WeatherDao.js');
 const Validator = require('./helper/Validator.js');
 const ValidationError = require("./error/ValidationError.js");
-const e = require('express');
+
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -46,6 +46,7 @@ app.get('/sites', async (req, res) => {
 app.delete('/sites/:siteName', async (req, res) => {
   try {
     Validator.validateDeleteSite(req);
+    console.log(`Deleting site named ${req.params.siteName}`);
     await SitesDao.deleteSite(req.params.siteName);
     res.status(200).send(req.params.siteName);
   }
@@ -77,6 +78,8 @@ app.put('/sites/:siteName', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+module.exports = { app, server, SitesDao};
