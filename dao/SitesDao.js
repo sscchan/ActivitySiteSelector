@@ -43,8 +43,11 @@ async function getSites() {
 
     let keys = await client.keys('*');
     for (key of keys) {
-        const retrievedValue = JSON.parse(await client.get(key));
-        sites.push(retrievedValue);
+        const retrievedValueString = await client.get(key);
+        if (retrievedValueString !== null) {
+            const retrievedValue = JSON.parse(retrievedValueString);
+            sites.push(retrievedValue);
+        }
     }
 
     return sites;
