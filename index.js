@@ -75,7 +75,6 @@ app.put('/sites/:siteName', async (req, res) => {
       res.status(500).send();
     }
   }
-
 });
 
 app.listen(port, () => {

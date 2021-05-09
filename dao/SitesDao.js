@@ -7,15 +7,20 @@ const SEED_SITES_DATA = [
 ];
 
 async function seedDatabaseData() {
-    console.log("Seeding initial site data to Redis database.");
-    for (seedSite of SEED_SITES_DATA) {
-        const isSeedSiteAlreadyInDatabase = await client.exists(seedSite.name);
-        if (!isSeedSiteAlreadyInDatabase) {
-            console.log("Seeding " + seedSite.name + " Entry");
-            await addSite(seedSite.name, seedSite.latitude, seedSite.longitude);
+    let sites = await getSites();
+    if (sites.length > 0) {
+        console.log("Some site data already exists in Redis database, skipping seeding operation.");
+    } else {
+        console.log("Seeding initial site data to Redis database.");
+        for (seedSite of SEED_SITES_DATA) {
+            const isSeedSiteAlreadyInDatabase = await client.exists(seedSite.name);
+            if (!isSeedSiteAlreadyInDatabase) {
+                console.log("Seeding " + seedSite.name + " Entry");
+                await addSite(seedSite.name, seedSite.latitude, seedSite.longitude);
+            }
         }
+        console.log("Completed initial site data seed to Redis database.")
     }
-    console.log("Completed initial site data seed to Redis database.")
 }
 
 async function addSite(name, latitude, longitude) {
