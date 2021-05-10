@@ -25,9 +25,15 @@ test('should filter out sites by Max Temperature threshold', async (done) => {
     { "name": "Mock2", "latitude": -35.0732, "longitude": 138.8576 },
   ]);
 
-  WeatherDao.getMaxTemperature
-    .mockReturnValueOnce(10)
-    .mockReturnValueOnce(99);
+  WeatherDao.getDailyWeatherForecast
+    .mockReturnValueOnce({
+      "maxTemperature": 10,
+      "forecastTime": 1620786600
+    })
+    .mockReturnValueOnce({
+      "maxTemperature": 99,
+      "forecastTime": 1620786600
+    });
 
   const getSitesResponse = await request(app).get(`/sites?maxTemperature=50`);
   expect(getSitesResponse.status).toBe(200);

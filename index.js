@@ -20,7 +20,10 @@ app.get('/sites', async (req, res) => {
     Validator.validateGetSites(req);
     let sites = await SitesDao.getSites();
     for (site of sites) {
-      site.maxTemperature = await WeatherDao.getMaxTemperature(site.latitude, site.longitude);
+      let weatherData = await WeatherDao.getDailyWeatherForecast(site.latitude, site.longitude);
+
+      site.forecastTime = weatherData.forecastTime;
+      site.maxTemperature = weatherData.maxTemperature;
     }
   
     if (req.query.maxTemperature) {

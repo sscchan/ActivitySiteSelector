@@ -6,7 +6,7 @@ if (!WEATHER_API_KEY) {
     console.error("ERROR! OpenWeatherOrg Weather API key not set in environment variable WEATHER_API_KEY");
 }
 
-async function getDailyWeatherForecasts(latitude, longitude) {
+async function getDailyWeatherForecastsFromAPI(latitude, longitude) {
     const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall',{ 
         params: 
         { 
@@ -17,13 +17,16 @@ async function getDailyWeatherForecasts(latitude, longitude) {
             "appid": WEATHER_API_KEY
         } 
     });
-    return response.data.daily;
+    return response.data;
 }
 
-async function getMaxTemperature(latitude, longitude) {
-    const dailyForecasts = await getDailyWeatherForecasts(latitude, longitude);
-    return dailyForecasts[1].temp.max;
+async function getDailyWeatherForecast(latitude, longitude, targetedNumberOfDaysAhead) {
+    const numberOfDaysAhead = targetedNumberOfDaysAhead || 1;
+    const dailyForecasts = await getDailyWeatherForecastsFromAPI(latitude, longitude);
+    return {
+        "forecastTime": dailyForecasts.daily[numberOfDaysAhead].dt,
+        "maxTemperature": dailyForecasts.daily[numberOfDaysAhead].temp.max
+    };
 }
 
-
-exports.getMaxTemperature = getMaxTemperature;
+exports.getDailyWeatherForecast = getDailyWeatherForecast;
