@@ -22,7 +22,7 @@ async function getDailyWeatherForecasts(latitude, longitude) {
 
 async function getMaxTemperature(latitude, longitude) {
     const dailyForecasts = await getDailyWeatherForecasts(latitude, longitude);
-    return dailyForecasts[0].temp.max;
+    return dailyForecasts[1].temp.max;
 }
 
 
